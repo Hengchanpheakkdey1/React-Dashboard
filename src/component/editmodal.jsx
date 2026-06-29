@@ -27,11 +27,12 @@ export default function EditModal({ product, onClose, onUpdated }) {
         setForm(prev => ({ ...prev, [name]: value }))
     }
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault()
         setSaving(true)
         try {
             const res = await fetch(`${API}/${product.id}`, {
-                method: 'PUT',
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     title: form.title,
@@ -58,12 +59,17 @@ export default function EditModal({ product, onClose, onUpdated }) {
             onClick={handleBackdrop}
             className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
         >
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-[400px] overflow-hidden">
+            <form
+                method="POST"
+                onSubmit={handleSubmit}
+                className="bg-white rounded-2xl shadow-xl w-full max-w-[400px] overflow-hidden"
+            >
 
                 {/* Header */}
                 <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-100">
                     <h2 className="text-[13px] font-semibold text-gray-900 m-0">Edit Product</h2>
                     <button
+                        type="button"
                         onClick={onClose}
                         className="w-5 h-5 flex items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors cursor-pointer border-0 bg-transparent"
                     >
@@ -170,20 +176,21 @@ export default function EditModal({ product, onClose, onUpdated }) {
                 {/* Footer */}
                 <div className="flex items-center justify-end gap-2 px-4 py-2.5 border-t border-gray-100">
                     <button
+                        type="button"
                         onClick={onClose}
                         className="px-3 py-1.5 text-[11px] font-semibold text-gray-600 border border-gray-200 rounded-xl bg-white hover:bg-gray-50 transition-colors cursor-pointer"
                     >
                         Cancel
                     </button>
                     <button
-                        onClick={handleSubmit}
+                        type="submit"
                         disabled={saving}
                         className="px-3 py-1.5 text-[11px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors cursor-pointer border-0 disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                         {saving ? 'Saving...' : 'Update Product'}
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
     )
 }

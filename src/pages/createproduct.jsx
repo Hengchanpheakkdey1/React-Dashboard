@@ -31,7 +31,8 @@ export default function CreateProduct() {
         setForm(prev => ({ ...prev, [name]: value }))
     }
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault()
         if (!form.title.trim()) { setError('Product name is required.'); return }
         if (!form.price || isNaN(form.price)) { setError('A valid price is required.'); return }
         if (!form.categoryId) { setError('Please select a category.'); return }
@@ -47,7 +48,7 @@ export default function CreateProduct() {
                     description: form.description,
                     categoryId: Number(form.categoryId),
                     images: form.imageUrl ? [form.imageUrl] : ['https://placehold.co/400'],
-                }),
+                }), // Converts a JavaScript object into JSON text.
             })
             navigate('/product')
         } catch {
@@ -75,7 +76,7 @@ export default function CreateProduct() {
             </div>
 
             {/* Form Card */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 max-w-3xl">
+            <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 max-w-3xl">
 
                 {error && (
                     <div className="mb-3 px-3 py-2 text-[11px] font-medium text-red-600 bg-red-50 border border-red-100 rounded-lg">
@@ -184,20 +185,21 @@ export default function CreateProduct() {
                 {/* Actions */}
                 <div className="flex items-center justify-end gap-2 border-t border-gray-100 pt-4">
                     <button
+                        type="reset"
                         onClick={() => navigate('/product')}
                         className="px-4 py-2 text-[11px] font-semibold text-gray-600 border border-gray-200 rounded-xl bg-white hover:bg-gray-50 transition-colors cursor-pointer"
                     >
                         Cancel
                     </button>
                     <button
-                        onClick={handleSubmit}
+                        type="submit"
                         disabled={saving}
                         className="px-4 py-2 text-[11px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors cursor-pointer border-0 disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                         {saving ? 'Creating...' : 'Create'}
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
     )
 }
